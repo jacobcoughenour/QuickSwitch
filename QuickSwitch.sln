@@ -1,0 +1,37 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.7.34202.233
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QuickSwitch", "QuickSwitch\QuickSwitch.csproj", "{F847D261-F099-41BE-9A5F-A5E0F7E1A90C}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Debug|arm64 = Debug|arm64
+		Debug|x86 = Debug|x86
+		Release|Any CPU = Release|Any CPU
+		Release|arm64 = Release|arm64
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{F847D261-F099-41BE-9A5F-A5E0F7E1A90C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F847D261-F099-41BE-9A5F-A5E0F7E1A90C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F847D261-F099-41BE-9A5F-A5E0F7E1A90C}.Debug|arm64.ActiveCfg = Debug|arm64
+		{F847D261-F099-41BE-9A5F-A5E0F7E1A90C}.Debug|arm64.Build.0 = Debug|arm64
+		{F847D261-F099-41BE-9A5F-A5E0F7E1A90C}.Debug|x86.ActiveCfg = Debug|x86
+		{F847D261-F099-41BE-9A5F-A5E0F7E1A90C}.Debug|x86.Build.0 = Debug|x86
+		{F847D261-F099-41BE-9A5F-A5E0F7E1A90C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F847D261-F099-41BE-9A5F-A5E0F7E1A90C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F847D261-F099-41BE-9A5F-A5E0F7E1A90C}.Release|arm64.ActiveCfg = Release|arm64
+		{F847D261-F099-41BE-9A5F-A5E0F7E1A90C}.Release|arm64.Build.0 = Release|arm64
+		{F847D261-F099-41BE-9A5F-A5E0F7E1A90C}.Release|x86.ActiveCfg = Release|x86
+		{F847D261-F099-41BE-9A5F-A5E0F7E1A90C}.Release|x86.Build.0 = Release|x86
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {FE23C6B0-3392-4998-AF5F-6F75D19B6149}
+	EndGlobalSection
+EndGlobal
