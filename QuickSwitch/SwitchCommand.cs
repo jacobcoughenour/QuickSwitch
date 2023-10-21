@@ -16,6 +16,10 @@ using System.Drawing;
 using System.Windows.Interop;
 using System.Windows.Media.Imaging;
 using System.Windows;
+using Microsoft.VisualStudio.TextManager.Interop;
+using System.Reflection;
+using System.Xml;
+using System.IO;
 
 namespace QuickSwitch
 {
@@ -114,6 +118,8 @@ namespace QuickSwitch
             // get file name
             var currentFileName = System.IO.Path.GetFileName(activeDocumentPath);
             var currentFileFirstPart = currentFileName.Substring(0, currentFileName.IndexOf('.'));
+            currentFileFirstPart = RemoveEnding(currentFileFirstPart, "View");
+            currentFileFirstPart = RemoveEnding(currentFileFirstPart, "ViewModel");
 
             // for each file in the same directory
             var items = new List<SwitchItem>();
@@ -125,6 +131,8 @@ namespace QuickSwitch
                     var isCurrent = file == activeDocumentPath;
                     var fileName = isCurrent ? currentFileName : System.IO.Path.GetFileName(file);
                     var start = isCurrent ? currentFileFirstPart : fileName.Substring(0, fileName.IndexOf('.'));
+                    start = RemoveEnding(start, "View");
+                    start = RemoveEnding(start, "ViewModel");
 
                     if (start != currentFileFirstPart)
                         continue;
@@ -152,6 +160,13 @@ namespace QuickSwitch
             catch (Exception)
             {
             }
+        }
+
+        private static string RemoveEnding(string text, string suffixToRemove)
+        {
+            if (text.EndsWith(suffixToRemove, StringComparison.OrdinalIgnoreCase))
+                return text.Substring(0, text.Length - suffixToRemove.Length);
+            return text;
         }
     }
 }

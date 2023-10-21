@@ -3,7 +3,6 @@
     <Identity Id="QuickSwitch.83beddd7-997b-45a0-8870-c0cdb7e021f4" Version="0.1" Language="en-US" Publisher="Jacob Coughenour" />
     <DisplayName>QuickSwitch</DisplayName>
     <Description xml:space="preserve">A Visual Studio extension for quickly switching between similar named files.</Description>
-    <GettingStartedGuide>Press Alt+O to open the quick switch window. Hold Alt while pressing O to select the file. Release Alt to select the file.</GettingStartedGuide>
     <Preview>true</Preview>
   </Metadata>
   <Installation>

@@ -2,8 +2,12 @@
 using EnvDTE80;
 using Microsoft.VisualStudio.Shell;
 using System;
+using System.IO;
+using System.Linq;
+using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Threading;
+using System.Xml;
 using Task = System.Threading.Tasks.Task;
 
 namespace QuickSwitch
@@ -35,6 +39,8 @@ namespace QuickSwitch
         /// </summary>
         public const string PackageGuidString = "42000b1d-be24-4524-a8dd-f426b0243632";
 
+        public static string VersionNumber = "?";
+
         #region Package Members
 
         /// <summary>
@@ -50,6 +56,18 @@ namespace QuickSwitch
             // Do any initialization that requires the UI thread after switching to the UI thread.
             await this.JoinableTaskFactory.SwitchToMainThreadAsync(cancellationToken);
             await SwitchCommand.InitializeAsync(this);
+
+            var asm = Assembly.GetExecutingAssembly();
+            var asmDir = Path.GetDirectoryName(asm.Location);
+            var manifestPath = Path.Combine(asmDir, "extension.vsixmanifest");
+            if (File.Exists(manifestPath))
+            {
+                var doc = new XmlDocument();
+                doc.Load(manifestPath);
+                var metaData = doc.DocumentElement.ChildNodes.Cast<XmlElement>().First(x => x.Name == "Metadata");
+                var identity = metaData.ChildNodes.Cast<XmlElement>().First(x => x.Name == "Identity");
+                VersionNumber = identity.GetAttribute("Version");
+            }
         }
 
         #endregion

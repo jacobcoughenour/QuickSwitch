@@ -21,10 +21,15 @@
             UseAeroCaptionButtons="True" />
     </WindowChrome.WindowChrome>
     <Grid Margin="8">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
         <ListBox x:Name="DocumentsList"
                  Background="Transparent"
                  FocusVisualStyle="{x:Null}"
-                 BorderThickness="0">
+                 BorderThickness="0"
+                 Grid.Row="0">
             <ListBox.ItemTemplate>
                 <DataTemplate>
                     <Grid Height="20">
@@ -51,5 +56,19 @@
                 </DataTemplate>
             </ListBox.ItemTemplate>
         </ListBox>
+        <StackPanel Grid.Row="1"
+                    Orientation="Horizontal">
+            <TextBlock Foreground="#c5bdc7dc"
+                       FontSize="16"
+                       FontWeight="Bold"
+                       VerticalAlignment="Bottom"
+                       Margin="0 0 4 -2">QuickSwitch</TextBlock>
+            <TextBlock Foreground="#80bdc7dc"
+                       x:Name="VersionNumberText"
+                       FontSize="10"
+                       FontWeight="SemiBold"
+                       VerticalAlignment="Bottom"
+                       Text="{Binding VersionNumber}"/>
+        </StackPanel>
     </Grid>
 </platformUi:DialogWindow>

@@ -40,6 +40,8 @@ namespace QuickSwitch
             KeyDown += SwitchWindow_KeyDown;
             KeyUp += SwitchWindow_KeyUp;
             ContentRendered += Window_ContentRendered;
+
+            VersionNumberText.Text = $"v{QuickSwitchPackage.VersionNumber}";
         }
 
         private void SwitchWindow_KeyUp(object sender, KeyEventArgs e)
