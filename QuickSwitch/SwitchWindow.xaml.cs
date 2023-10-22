@@ -1,4 +1,7 @@
 ﻿using Microsoft.VisualStudio.PlatformUI;
+using Microsoft.VisualStudio.Settings;
+using Microsoft.VisualStudio.Shell;
+using Microsoft.VisualStudio.Shell.Settings;
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
@@ -14,10 +17,13 @@ namespace QuickSwitch
     /// </summary>
     public partial class SwitchWindow : DialogWindow
     {
-        public SwitchItem SelectedItem => DocumentsList.SelectedItem as SwitchItem;
+        public SwitchItem SelectedItem => DocumentsList?.SelectedItem as SwitchItem;
+
+        private SettingsManager _settingsManager;
 
         public SwitchWindow()
         {
+            ThreadHelper.ThrowIfNotOnUIThread();
             InitializeComponent();
 
             Activated += SwitchWindow_Activated;
@@ -25,8 +31,44 @@ namespace QuickSwitch
             KeyDown += SwitchWindow_KeyDown;
             KeyUp += SwitchWindow_KeyUp;
             ContentRendered += Window_ContentRendered;
+            MouseDown += DialogWindow_MouseDown;
+            Closed += SwitchWindow_Closed;
 
             VersionNumberText.Text = $"v{QuickSwitchPackage.VersionNumber}";
+
+            LoadPosition();
+        }
+
+        private void LoadPosition()
+        {
+            // load the window position and size
+            _settingsManager = new ShellSettingsManager(ServiceProvider.GlobalProvider);
+            WritableSettingsStore store = _settingsManager.GetWritableSettingsStore(SettingsScope.UserSettings);
+            if (!store.CollectionExists("QuickSwitch"))
+                store.CreateCollection("QuickSwitch");
+            Width = store.GetInt64("QuickSwitch", "Width", (int)Width);
+            Height = store.GetInt64("QuickSwitch", "Height", (int)Height);
+
+            // get default values
+            var area = SystemParameters.WorkArea;
+            var centerLeft = area.Left + area.Width / 2;
+            var centerTop = area.Top + area.Height / 2;
+            Left = (double)store.GetInt64("QuickSwitch", "Left", (int)centerLeft);
+            Top = (double)store.GetInt64("QuickSwitch", "Top", (int)centerTop);
+
+            // todo position it relative to the main visual studio window
+        }
+
+        private void SwitchWindow_Closed(object sender, EventArgs e)
+        {
+            // save the window position and size
+            WritableSettingsStore store = _settingsManager.GetWritableSettingsStore(SettingsScope.UserSettings);
+            if (!store.CollectionExists("QuickSwitch"))
+                store.CreateCollection("QuickSwitch");
+            store.SetInt64("QuickSwitch", "Width", (int)Width);
+            store.SetInt64("QuickSwitch", "Height", (int)Height);
+            store.SetInt64("QuickSwitch", "Left", (int)Left);
+            store.SetInt64("QuickSwitch", "Top", (int)Top);
         }
 
         private void SwitchWindow_KeyUp(object sender, KeyEventArgs e)
@@ -69,6 +111,7 @@ namespace QuickSwitch
 
         private void SwitchWindow_Activated(object sender, EventArgs e)
         {
+
             FocusList();
         }
 
@@ -76,6 +119,7 @@ namespace QuickSwitch
         {
             try
             {
+                // close the window when it loses focus
                 Close();
             }
             catch (Exception)
@@ -101,6 +145,13 @@ namespace QuickSwitch
         {
             DocumentsList.Focus();
             Keyboard.Focus(DocumentsList);
+        }
+
+        private void DialogWindow_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            // makes window draggable
+            if (e.LeftButton == MouseButtonState.Pressed)
+                DragMove();
         }
 
         #region window styling stuff
@@ -148,5 +199,6 @@ namespace QuickSwitch
         }
 
         #endregion
+
     }
 }

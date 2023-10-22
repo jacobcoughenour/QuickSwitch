@@ -49,6 +49,7 @@
     <Compile Include="QuickSwitchPackage.cs" />
     <Compile Include="SwitchCommand.cs" />
     <Compile Include="SwitchItem.cs" />
+    <Compile Include="SwitchLogic.cs" />
     <Compile Include="SwitchWindow.xaml.cs">
       <DependentUpon>SwitchWindow.xaml</DependentUpon>
     </Compile>
@@ -81,6 +82,10 @@
     </VSCTCompile>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Resources\icon.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
     <Content Include="Resources\SwitchCommand.png" />
   </ItemGroup>
   <ItemGroup>

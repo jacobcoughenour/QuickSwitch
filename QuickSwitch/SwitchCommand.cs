@@ -1,25 +1,13 @@
 ﻿using Microsoft.VisualStudio.Shell;
-using Microsoft.VisualStudio.Shell.Interop;
 using System;
 using System.ComponentModel.Design;
-using System.Globalization;
-using System.Threading;
-using System.Threading.Tasks;
-using Task = System.Threading.Tasks.Task;
-using System.Diagnostics;
-using System.Windows.Documents;
-using System.Collections.Generic;
-using System.Linq;
-using Microsoft.VisualStudio.Settings;
-using Microsoft.VisualStudio.Shell.Settings;
 using System.Drawing;
+using System.IO;
+using System.Linq;
+using System.Windows;
 using System.Windows.Interop;
 using System.Windows.Media.Imaging;
-using System.Windows;
-using Microsoft.VisualStudio.TextManager.Interop;
-using System.Reflection;
-using System.Xml;
-using System.IO;
+using Task = System.Threading.Tasks.Task;
 
 namespace QuickSwitch
 {
@@ -107,48 +95,29 @@ namespace QuickSwitch
             // get current focused document
             var dte = (EnvDTE.DTE)Package.GetGlobalService(typeof(EnvDTE.DTE));
             var activeDocument = dte.ActiveDocument;
-
             if (activeDocument == null)
                 // no document is open
                 return;
 
-            var activeDocumentPath = activeDocument.FullName;
-            // get parent directory
-            var parentDirectory = System.IO.Path.GetDirectoryName(activeDocumentPath);
-            // get file name
-            var currentFileName = System.IO.Path.GetFileName(activeDocumentPath);
-            var currentFileFirstPart = currentFileName.Substring(0, currentFileName.IndexOf('.'));
-            currentFileFirstPart = RemoveEnding(currentFileFirstPart, "View");
-            currentFileFirstPart = RemoveEnding(currentFileFirstPart, "ViewModel");
-
-            // for each file in the same directory
-            var items = new List<SwitchItem>();
-            foreach (var file in System.IO.Directory.GetFiles(parentDirectory))
+            // open the switch window
+            // todo would be cool if we could keep a single instance of the window and just show and hide it
+            // that might also get rid of the flashing caused by enabling the mica window style
+            var switchWindow = new SwitchWindow();
+            var items = SwitchLogic.GetMatchingFiles(activeDocument.FullName).Select(file =>
             {
+                ThreadHelper.ThrowIfNotOnUIThread();
                 // get icon for file extension
                 using (Icon icon = Icon.ExtractAssociatedIcon(file))
                 {
-                    var isCurrent = file == activeDocumentPath;
-                    var fileName = isCurrent ? currentFileName : System.IO.Path.GetFileName(file);
-                    var start = isCurrent ? currentFileFirstPart : fileName.Substring(0, fileName.IndexOf('.'));
-                    start = RemoveEnding(start, "View");
-                    start = RemoveEnding(start, "ViewModel");
-
-                    if (start != currentFileFirstPart)
-                        continue;
-
-                    // add to list
-                    items.Add(new SwitchItem {
+                    return new SwitchItem
+                    {
                         Icon = Imaging.CreateBitmapSourceFromHIcon(icon.Handle, Int32Rect.Empty, BitmapSizeOptions.FromEmptyOptions()),
-                        IsCurrentFile = isCurrent,
-                        Name = fileName,
+                        IsCurrentFile = activeDocument.FullName == file,
+                        Name = Path.GetFileName(file),
                         FullPath = file
-                    });
+                    };
                 }
-            }
-
-            // open the switch window
-            var switchWindow = new SwitchWindow();
+            });
             switchWindow.PopulateItems(items);
             switchWindow.ShowModal();
 
@@ -160,13 +129,6 @@ namespace QuickSwitch
             catch (Exception)
             {
             }
-        }
-
-        private static string RemoveEnding(string text, string suffixToRemove)
-        {
-            if (text.EndsWith(suffixToRemove, StringComparison.OrdinalIgnoreCase))
-                return text.Substring(0, text.Length - suffixToRemove.Length);
-            return text;
         }
     }
 }

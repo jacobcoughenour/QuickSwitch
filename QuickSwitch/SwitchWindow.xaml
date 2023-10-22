@@ -9,9 +9,12 @@
                          d:DesignHeight="450" d:DesignWidth="800"
                          Background="Transparent"
                          Width="320"
-                         Height="320"
+                         Height="160"
+                         MinWidth="240"
+                         MinHeight="128"
                          Title="QuickSwitch"
-                         WindowStyle="None">
+                         WindowStyle="None"
+                         WindowStartupLocation="Manual">
     <WindowChrome.WindowChrome>
         <WindowChrome
             CaptionHeight="20"
@@ -26,10 +29,10 @@
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         <ListBox x:Name="DocumentsList"
-                 Background="Transparent"
-                 FocusVisualStyle="{x:Null}"
-                 BorderThickness="0"
-                 Grid.Row="0">
+                    Background="Transparent"
+                    FocusVisualStyle="{x:Null}"
+                    BorderThickness="0"
+                    Grid.Row="0">
             <ListBox.ItemTemplate>
                 <DataTemplate>
                     <Grid Height="20">
@@ -38,15 +41,15 @@
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
                         <Image Grid.Column="0"
-                               Source="{Binding Icon}"
-                               Width="16"
-                               Height="16"
-                               Margin="0 0 4 0"/>
+                                Source="{Binding Icon}"
+                                Width="16"
+                                Height="16"
+                                Margin="0 0 4 0"/>
                         <TextBlock x:Name="FileName"
-                                   Grid.Column="1"
-                                   Text="{Binding Name}"
-                                   Foreground="White"
-                                   VerticalAlignment="Center"/>
+                                    Grid.Column="1"
+                                    Text="{Binding Name}"
+                                    Foreground="White"
+                                    VerticalAlignment="Center"/>
                     </Grid>
                     <DataTemplate.Triggers>
                         <DataTrigger Binding="{Binding IsCurrentFile}" Value="True">
@@ -59,16 +62,16 @@
         <StackPanel Grid.Row="1"
                     Orientation="Horizontal">
             <TextBlock Foreground="#c5bdc7dc"
-                       FontSize="16"
-                       FontWeight="Bold"
-                       VerticalAlignment="Bottom"
-                       Margin="0 0 4 -2">QuickSwitch</TextBlock>
+                        FontSize="16"
+                        FontWeight="Bold"
+                        VerticalAlignment="Bottom"
+                        Margin="0 0 4 -2">QuickSwitch</TextBlock>
             <TextBlock Foreground="#80bdc7dc"
-                       x:Name="VersionNumberText"
-                       FontSize="10"
-                       FontWeight="SemiBold"
-                       VerticalAlignment="Bottom"
-                       Text="{Binding VersionNumber}"/>
+                        x:Name="VersionNumberText"
+                        FontSize="10"
+                        FontWeight="SemiBold"
+                        VerticalAlignment="Bottom"
+                        Text="{Binding VersionNumber}"/>
         </StackPanel>
     </Grid>
 </platformUi:DialogWindow>
