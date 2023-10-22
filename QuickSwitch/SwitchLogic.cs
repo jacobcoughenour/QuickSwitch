@@ -8,7 +8,7 @@ namespace QuickSwitch
     public class SwitchLogic
     {
         // todo make this configurable in the options
-        public static string[] SpecialSuffixes = new string[] { "View", "ViewModel" };
+        public static string[] SpecialSuffixes = new string[] { "Model" };
 
         /// <summary>
         /// Removes the extensions and special suffixes from the file name.
