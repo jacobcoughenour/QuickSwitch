@@ -1,26 +1,11 @@
-﻿using Microsoft.VisualStudio.Package;
-using Microsoft.VisualStudio.PlatformUI;
-using Microsoft.VisualStudio.Settings;
-using Microsoft.VisualStudio.Shell;
-using Microsoft.VisualStudio.Shell.Settings;
+﻿using Microsoft.VisualStudio.PlatformUI;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Drawing;
-using System.Linq;
 using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Interop;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace QuickSwitch
 {
@@ -49,6 +34,7 @@ namespace QuickSwitch
             if (e.SystemKey == Key.None && e.Key == Key.LeftAlt)
             {
                 Close();
+                e.Handled = true;
                 return;
             }
         }
@@ -58,6 +44,7 @@ namespace QuickSwitch
             if (e.Key == Key.Escape)
             {
                 Close();
+                e.Handled = true;
                 return;
             }
 
@@ -68,12 +55,14 @@ namespace QuickSwitch
             {
                 // select next
                 DocumentsList.SelectedIndex = (DocumentsList.SelectedIndex + 1) % DocumentsList.Items.Count;
+                e.Handled = true;
                 return;
-            } 
+            }
             if (isDown && e.KeyboardDevice.Modifiers == (ModifierKeys.Shift | ModifierKeys.Alt))
             {
                 // select previous
                 DocumentsList.SelectedIndex = (DocumentsList.Items.Count + (DocumentsList.SelectedIndex - 1)) % DocumentsList.Items.Count;
+                e.Handled = true;
                 return;
             }
         }
@@ -113,6 +102,8 @@ namespace QuickSwitch
             DocumentsList.Focus();
             Keyboard.Focus(DocumentsList);
         }
+
+        #region window styling stuff
 
         [DllImport("dwmapi.dll")]
         public static extern int DwmSetWindowAttribute(IntPtr hwnd, DwmWindowAttribute dwAttribute, ref int pvAttribute, int cbAttribute);
@@ -155,5 +146,7 @@ namespace QuickSwitch
             // Subscribe to PresentationSource's ContentRendered event
             presentationSource.ContentRendered += Window_ContentRendered;
         }
+
+        #endregion
     }
 }
