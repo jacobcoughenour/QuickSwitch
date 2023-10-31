@@ -16,7 +16,8 @@ namespace QuickSwitch
         /// </summary>
         public static string NormalizeFileName(string fileName)
         {
-            var withoutExtensions = fileName.Substring(0, fileName.IndexOf('.'));
+            var firstDotIndex = fileName.IndexOf('.');
+            var withoutExtensions = firstDotIndex == -1 ? fileName : fileName.Substring(0, firstDotIndex);
             foreach (var suffix in SpecialSuffixes)
                 if (withoutExtensions.EndsWith(suffix, StringComparison.OrdinalIgnoreCase))
                     return withoutExtensions.Substring(0, withoutExtensions.Length - suffix.Length);
