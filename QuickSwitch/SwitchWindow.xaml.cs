@@ -73,7 +73,7 @@ namespace QuickSwitch
 
         private void SwitchWindow_KeyUp(object sender, KeyEventArgs e)
         {
-            if (e.SystemKey == Key.None && e.Key == Key.LeftAlt)
+            if (e.SystemKey == Key.None && (e.Key == Key.LeftAlt || e.Key == Key.RightAlt))
             {
                 Close();
                 e.Handled = true;
