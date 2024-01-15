@@ -4,6 +4,7 @@ using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Settings;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Input;
@@ -73,7 +74,19 @@ namespace QuickSwitch
 
         private void SwitchWindow_KeyUp(object sender, KeyEventArgs e)
         {
-            if (e.SystemKey == Key.None && (e.Key == Key.LeftAlt || e.Key == Key.RightAlt))
+            if (e.SystemKey != Key.None)
+                return;
+
+            var switchGestures = GestureMap.GetGestures(SwitchCommand.CommandFullName);
+            if (!switchGestures.Any())
+                return;
+
+            var hasAlt = switchGestures.Any(g => g.Modifiers.HasFlag(ModifierKeys.Alt));
+            var hasCtrl = switchGestures.Any(g => g.Modifiers.HasFlag(ModifierKeys.Control));
+
+            // close the window if the user releases the modifier key from the gesture
+            if ((hasAlt && (e.Key == Key.LeftAlt || e.Key == Key.RightAlt))
+                || (hasCtrl && (e.Key == Key.LeftCtrl || e.Key == Key.RightCtrl)))
             {
                 Close();
                 e.Handled = true;
@@ -81,7 +94,7 @@ namespace QuickSwitch
             }
         }
 
-        private void SwitchWindow_KeyDown(object sender, KeyEventArgs e)
+        private async void SwitchWindow_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.Escape)
             {
@@ -90,28 +103,32 @@ namespace QuickSwitch
                 return;
             }
 
-            // todo get the keybind settings
+            var switchGestures = GestureMap.GetGestures(SwitchCommand.CommandFullName);
+            if (!switchGestures.Any())
+                return;
 
-            var isDown = Keyboard.GetKeyStates(Key.O).HasFlag(KeyStates.Down);
-            if (isDown && e.KeyboardDevice.Modifiers == ModifierKeys.Alt)
+            foreach (var gesture in switchGestures)
             {
-                // select next
-                DocumentsList.SelectedIndex = (DocumentsList.SelectedIndex + 1) % DocumentsList.Items.Count;
-                e.Handled = true;
-                return;
-            }
-            if (isDown && e.KeyboardDevice.Modifiers == (ModifierKeys.Shift | ModifierKeys.Alt))
-            {
-                // select previous
-                DocumentsList.SelectedIndex = (DocumentsList.Items.Count + (DocumentsList.SelectedIndex - 1)) % DocumentsList.Items.Count;
-                e.Handled = true;
-                return;
+                var isDown = Keyboard.GetKeyStates(gesture.Key).HasFlag(KeyStates.Down);
+                if (isDown && e.KeyboardDevice.Modifiers == gesture.Modifiers)
+                {
+                    // select next
+                    DocumentsList.SelectedIndex = (DocumentsList.SelectedIndex + 1) % DocumentsList.Items.Count;
+                    e.Handled = true;
+                    return;
+                }
+                if (isDown && e.KeyboardDevice.Modifiers == (ModifierKeys.Shift | gesture.Modifiers))
+                {
+                    // select previous
+                    DocumentsList.SelectedIndex = (DocumentsList.Items.Count + (DocumentsList.SelectedIndex - 1)) % DocumentsList.Items.Count;
+                    e.Handled = true;
+                    return;
+                }
             }
         }
 
         private void SwitchWindow_Activated(object sender, EventArgs e)
         {
-
             FocusList();
         }
 

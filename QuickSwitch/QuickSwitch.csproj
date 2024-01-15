@@ -45,6 +45,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="GestureMap.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="QuickSwitchPackage.cs" />
     <Compile Include="SwitchCommand.cs" />

@@ -31,6 +31,8 @@ namespace QuickSwitch
         /// </summary>
         private readonly AsyncPackage package;
 
+        public static readonly string CommandFullName = "Tools.InvokeSwitchCommand";
+
         /// <summary>
         /// Initializes a new instance of the <see cref="SwitchCommand"/> class.
         /// Adds our command handlers for menu (commands must exist in the command table file)
@@ -98,6 +100,8 @@ namespace QuickSwitch
             if (activeDocument == null)
                 // no document is open
                 return;
+
+            GestureMap.Update(dte);
 
             // open the switch window
             // todo would be cool if we could keep a single instance of the window and just show and hide it

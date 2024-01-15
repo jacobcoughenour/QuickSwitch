@@ -93,6 +93,6 @@
   </Symbols>
 
     <KeyBindings>
-        <KeyBinding guid="guidQuickSwitchPackageCmdSet" id="SwitchCommandId" editor="guidVSStd97" key1="o" mod1="ALT" />
+        <KeyBinding guid="guidQuickSwitchPackageCmdSet" id="SwitchCommandId" editor="guidVSStd97" key1="O" mod2="ALT" mod1="Control" />
     </KeyBindings>
 </CommandTable>
